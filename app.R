@@ -1,0 +1,22 @@
+library(shiny)
+library(shinyjs)
+library(shinyWidgets)
+library(excelR)
+library(stringr)
+library(shinyalert)
+library(colourpicker)
+library(RCurl)
+library(tidyverse)
+library(shinydashboard)
+library(DT)
+library(rhandsontable)
+library(plotly)
+library(tidyr)
+library(tidytext)
+source('functions.R')
+
+source('ui.R')
+source('server.R')
+
+# Run the application 
+shinyApp(ui = ui, server = server)
