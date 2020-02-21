@@ -13,6 +13,7 @@ library(rhandsontable)
 library(plotly)
 library(tidyr)
 library(tidytext)
+library(RColorBrewer )
 source('functions.R')
 
 source('ui.R')

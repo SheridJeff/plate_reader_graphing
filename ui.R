@@ -225,7 +225,7 @@ ui <- tagList(
                                                       textInput('xlab', 'X axis label:', value = ''),
                                                       numericInput('xangle', 'X axis label angle:', value = 45),
                                                       'Axis options:',
-                                                      numericInput('axiswidth', 'Axis width:', value = 1),
+                                                      numericInput('axiswidth', 'Axis width:', value = 0.5, step = 0.1),
                                                       'Colour options:',
                                                       conditionalPanel("input.graphtype == 'Bar Graph'",
                                                                        colourInput('barcol', 'Bar colour', value = 'black'),
@@ -260,7 +260,7 @@ ui <- tagList(
                                                       ),
                                                column(4,
                                                       'Graph:',
-                                                      plotlyOutput('g_graphtab'))
+                                                      plotOutput('graph_render'))
                                              )
                                     )
                                   )

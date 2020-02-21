@@ -512,7 +512,7 @@ server <- function(input, output, session){
   
   # Plotting the graph for display
   {
-    g_graphtab <- reactive({
+    graph <- reactive({
       theme_input <- match.fun(input$theme)
       if (input$graphtype == 'Bar Graph'){
         row_order <- as.factor(row_order())
@@ -520,7 +520,7 @@ server <- function(input, output, session){
         df <- df[row_order,]
         order <- as.factor(df$Label)
         # df %>% rowid_to_column(var = "rowid")
-        g <-  ggplot(df, aes(x = Label, y = Mean, ymin = Mean, ymax  = Mean + SD)) +
+        graph <-  ggplot(df, aes(x = Label, y = Mean, ymin = Mean, ymax  = Mean + SD)) +
           geom_errorbar(stat = 'identity', width = input$errwidth, size = input$errsize) +
           geom_bar(stat = 'identity', color = input$barout, fill = input$barcol, width = input$barwidth) +
           ylab(input$ylab) +
@@ -542,7 +542,7 @@ server <- function(input, output, session){
             panel.grid.minor.x = element_blank(), 
             panel.grid.minor.y = element_blank()
           )
-        return(g)
+        return(graph)
       }
       else if (input$graphtype == 'Dose Response'){
         # Calling data and generating curve
@@ -565,7 +565,7 @@ server <- function(input, output, session){
         colours <- as.character(colour_table$Colour)
         
         # Rendering graph
-        g <- ggplot() +
+        graph <- ggplot() +
           geom_point(data = df, aes(Concentration, Mean, color = Label)) +
           geom_line(data = curve, aes(x = Concentration,y = Curve, color = Label)) +
           geom_errorbar(data = df,aes(x = Concentration, ymin = Mean - SD, ymax = Mean + SD, color = Label), linetype = 'solid', width = input$errwidth) +
@@ -590,12 +590,29 @@ server <- function(input, output, session){
             panel.grid.minor.x = element_blank(), 
             panel.grid.minor.y = element_blank()
           )
-        return(g)
+        return(graph)
       }
     })
     
-    output$g_graphtab <- renderPlotly({
-        g <- ggplotly(g_graphtab(), autosize=FALSE, width = input$graphwidth, height = input$graphheight, tooltip = list(textfont = input$font))
+    # Rendering the plot for UI output
+    output$graph_render <- renderPlot({
+      plot(graph())
+        # g <- ggplotly(g_graphtab(), autosize=FALSE, width = input$graphwidth, height = input$graphheight, tooltip = list(textfont = input$font))
+    },
+    height = function(){
+      input$graphheight
+    },
+    width = function(){
+      input$graphwidth
     })
+    
+    # UI output to render graph with user specified height and width.
+    # Can't have reactive inputs in renderPlot
+    # output$g_graphtab <- renderUI({
+    #   if (!is.null(graph)){
+    #     plotOutput('graph_render', height = 400, width = 400)
+    #   }
+    # })
+    
   }
 }
